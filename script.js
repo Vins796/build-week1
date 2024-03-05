@@ -98,32 +98,49 @@ const questions = [
   // },
 ];
 
-
+// puntatore div contenitore della domanda 
 const questionContainer = document.getElementById('question')
 
+// cicliamo l'array di oggetti "questions"
 for (let i = 0; i < questions.length; i++) {
-    let titoloDomanda = document.createElement('p');
-    // let bottone = document.createElement('button');
 
-    titoloDomanda.textContent = questions[i].question;
-    questionContainer.appendChild(titoloDomanda);
+  // creiamo un tag p dove infilarci dentro il testo della domanda
+  let titoloDomanda = document.createElement('p');
 
-    let pippo = questions[i].incorrect_answers
-    for (let n = 0; n < pippo.length; n++) {
+  // TODO - rendering del bottone per confermare, tramite eventListener
+  // let bottone = document.createElement('button');
 
-      let questionType = '';
-      if (questions[i].type === 'multiple') {
-        questionType = 'checkbox';
-      } else {
-        questionType = 'radio';
-      }
+  // inseriamo dentro "titoloDomanda" il testo della domanda
+  titoloDomanda.textContent = questions[i].question;
 
-      let risposte = document.createElement('div'); 
-      risposte.innerHTML = `<input type='${questionType}' value='${pippo[n]}'> <label>${pippo[n]}</label>`
-      // risposte.textContent = pippo[n];
-      questionContainer.appendChild(risposte);
-      console.log(risposte);
+  // inseriamo dentro il div contenitore "questionContainer" il nostro tag p con il testo della domanda
+  questionContainer.appendChild(titoloDomanda);
+
+  // creiamo una variabile con dentro l'array "incorrect_answers" di ogni singola question
+  let incorrectAnswers = questions[i].incorrect_answers
+  
+  // cicliamo "incorrectAnswers"
+  for (let n = 0; n < incorrectAnswers.length; n++) {
+
+    // inizializiamo la varibile "questionType" come una stringa
+    let questionType = '';
+
+    // check - se "questions[i].type" === multiple allora questionType sarà "checkbox", altrimenti "Radio"
+    if (questions[i].type === 'multiple') {
+      questionType = 'checkbox';
+    } else {
+      questionType = 'radio';
     }
+
+    // creiamo un div contenitore di tutte gli input
+    let risposte = document.createElement('div'); 
+
+    // inseriamo dentro il nuovo div l'html degli input, uno per ogni elmemento dell'array "incorrectAnswers"
+    risposte.innerHTML = `<input type='${questionType}' value='${pippo[n]}'> <label>${pippo[n]}</label>`
+
+    // inseriamo dentro il div contenitore "questionContainer" il nostri tag input con le opzioni di risposta
+    questionContainer.appendChild(risposte);
+  }
 }
     
     
