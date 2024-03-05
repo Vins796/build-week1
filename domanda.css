@@ -1,0 +1,55 @@
+body{
+    padding: 0;
+    margin: 0;
+    background-image: url(assets/bg.jpg);
+    background-size: cover;
+}
+
+.header{
+    width: 100%;
+    height:200px;
+    display: flex;
+    align-items: center;
+}
+
+.header img{
+    width:15%;
+    margin-left: 5%;
+}
+
+.domanda{
+    width:100%;
+    height:200px;
+    margin-top: 50px;
+    color: aliceblue;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 50px;
+    font-weight: 500;
+    display: flex;
+    justify-content: center;
+}
+
+.opzioni{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.opzioni button{
+    width: 20%;
+    height: 100px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 20px;
+    color: aliceblue;
+    background-color: rgba(62, 59, 97, 0.4);
+    border-radius: 50px;
+    margin-right: 40px;
+}
+
+.opzioni button:hover{
+    background-color: blueviolet;
+}
+
+p {font-size: 12px;}
+
+label {font-size: 12px;}
