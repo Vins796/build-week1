@@ -1,0 +1,93 @@
+/* -------------------------
+applico i reset al browser 
+----------------------------*/
+* {padding: 0; margin: 0; box-sizing: border-box;}
+
+/* -------------------------
+applico il bg alla pagina 
+---------------------------*/
+
+body {
+    background-image: url(assets/bg.jpg); background-size: cover; font-size: 16px;
+    font-family: "Outfit", sans-serif;
+}
+
+#container {
+    height: 100vh; width: 70%;
+    margin: auto;
+}
+
+/* ---------------------------
+imposto lo style per il logo 
+-----------------------------*/
+.logo {width: 80%; padding-top: 50px;}
+.logo img{height: 50px;}
+
+/* ----------------------------------
+imposto lo stile per il main cotainer 
+-------------------------------------*/
+#main-container {
+    width: 60%;
+    margin-top: 9%;
+}
+ /* stile per il titolone */
+.title {width: 50%; color: #fff; font-size: 6rem; font-weight: 300; line-height: 0.8; }
+.title span {font-weight: 700;}
+
+/* stile per il titolo rosa e per il paragrafo */
+#main-container h2 {margin-top: 45px; color: #D20094; font-size: 2rem;}
+#main-container p {color: #fff; width: 80%; margin-top: 14px; line-height: 1.3; font-size: 1.3rem; font-weight: 300;}
+
+
+/* ----------------------------------------
+imposto lo stile della lista di indicazioni 
+-------------------------------------------*/
+#lista {margin-top: 45px; width: 80%;}
+
+.list-item {margin-left: 24px;}
+.list-item li {color: #fff; font-weight: 200; width: 700px; line-height: 1.5; font-size: 1.3rem;}
+
+/* ---------------------------------------------
+imposto lo stile per la section della conferma 
+-------------------------------------------------*/
+
+#validation {
+    margin-top: 20%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 75%;
+}
+.confirm {
+    position: absolute;
+    left: -9999px;
+}
+
+/* cambio lo stile al quadratino della checkbox */
+.confirm + label::before {
+    content: '';
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    margin-right: 12px;
+    border: 1px solid snow;
+}
+
+label {color: #fff; font-size: 1.2rem;}
+
+#btn {
+    padding: 15px 40px; 
+    border-radius: 0; border: none;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 1.2rem;
+    background-color: #00FFFF;
+    transition: background-color 0.3s, box-shadow 0.3s;
+    box-shadow: 0px 0px 10px 0px #00FFFF;
+}
+
+#btn:hover {
+    transform: scale(1.1);
+    transition: all 1s cubic-bezier(.215, .61, .355, 1);
+}
+
