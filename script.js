@@ -1,7 +1,7 @@
 const questions = [
   {
     category: "Science: Computers",
-    type: "boolean",
+    type: "multiple",
     difficulty: "easy",
     question: "What does CPU stand for?",
     correct_answer: "Central Processing Unit",
@@ -98,6 +98,45 @@ const questions = [
   // },
 ];
 
+
+/*
+
+TODO LIST
+
+1 - creare un contenitore per la domanda e le risposte
+
+2 - ciclare gli oggetti dell'array questions
+
+3 - per ogni oggetto (questions[i]) creare:
+
+  a - il testo della domanda (questions[i].question)
+  
+  b - i bottoni (input type radio / checkbox) per le risposte sbagliate
+      (ciclo su array questions[i].incorrect_answers + questions[i].correct_answer)
+  
+  c - creare nella parte bassa della pagina il contatore delle domande
+      (es. "Question 1/10")
+  
+  e - bottone di conferma con event Listener che raccoglie il value
+      inserito dall'utente e triggera la prossima domanda
+  
+  d - (extra) creare una funzione che randomizza la posizione dei bottoni
+      (input incorrect_answers + correct_answer)
+  
+  f - (extra) creare un timer di 60 secondi
+      allo scadere viene raccolto l'input value dell'utente
+      (o niente se non ha selezionato nulla) e prosegue 
+      con la prossima iterazione dell'array questions
+
+4 - usare ciclo do/while (idea) per passare al prossimo elemento dell'array questions
+
+5 - raccogliere le risposte dell'utente e creare un sistema di punteggio
+
+6 - a fine test mostrare il punteggio
+
+*/
+
+
 // puntatore div contenitore della domanda 
 const questionContainer = document.getElementById('question')
 
@@ -122,6 +161,7 @@ for (let i = 0; i < questions.length; i++) {
   // cicliamo "incorrectAnswers"
   for (let n = 0; n < incorrectAnswers.length; n++) {
 
+    // TODO - chiedere a Simo se ha senso questa distinzione x type (radio/checkbox)
     // inizializiamo la varibile "questionType" come una stringa
     let questionType = '';
 
@@ -136,7 +176,7 @@ for (let i = 0; i < questions.length; i++) {
     let risposte = document.createElement('div'); 
 
     // inseriamo dentro il nuovo div l'html degli input, uno per ogni elmemento dell'array "incorrectAnswers"
-    risposte.innerHTML = `<input type='${questionType}' value='${pippo[n]}'> <label>${pippo[n]}</label>`
+    risposte.innerHTML = `<input type='${questionType}' name='questionNumber${[i]}' value='${incorrectAnswers[n]}'> <label>${incorrectAnswers[n]}</label>`
 
     // inseriamo dentro il div contenitore "questionContainer" il nostri tag input con le opzioni di risposta
     questionContainer.appendChild(risposte);
