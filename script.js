@@ -65,11 +65,7 @@ const questions = [
     question:
       "What is the code name for the mobile operating system Android 7.0?",
     correct_answer: "Nougat",
-    incorrect_answers: [
-      "Ice Cream Sandwich",
-      "Jelly Bean",
-      "Marshmallow",
-    ],
+    incorrect_answers: ["Ice Cream Sandwich", "Jelly Bean", "Marshmallow"],
   },
   {
     category: "Science: Computers",
@@ -97,7 +93,6 @@ const questions = [
     incorrect_answers: ["Python", "C", "Jakarta"],
   },
 ];
-
 
 /*
 
@@ -136,105 +131,107 @@ TODO LIST
 
 */
 
-
 // PAGINA BENVENUTO
 function proceed() {
+  const inputCheckbox = document.getElementById("checkbox1");
+  const link = document.getElementById("linkDomande");
 
-  const inputCheckbox = document.getElementById('checkbox1');
-  const link = document.getElementById('linkDomande');
-  
   if (inputCheckbox.checked) {
-    link.href = 'domanda.html';
+    link.href = "domanda.html";
   }
   console.log(inputCheckbox.checked);
 }
 
+// PAGINA DOMANDE
 
-// puntatore div contenitore della domanda 
-const questionContainer = document.getElementById('question')
+// puntatore div contenitore della domanda
+const questionContainer = document.getElementById("question");
 let contatore = 0;
 let risposteGiuste = 0;
 
 function makeQuestion() {
-
-  questionContainer.innerHTML = '';
+  questionContainer.innerHTML = "";
   if (contatore >= questions.length) {
     questionContainer.innerHTML = `<h2> Complimenti! Hai completato il quiz </h2>`;
-
-    let pippo = document.createElement('section');
-    pippo.innerHTML = `<div id='pippoLista'>Sono la lista</div>`;
-
-    questionContainer.appendChild(pippo);
-
   } else {
     const currentQuestion = questions[contatore];
-  
-  // creiamo un tag p dove infilarci dentro il testo della domanda
-  let titoloDomanda = document.createElement('h2');
-  
-  // inseriamo dentro "titoloDomanda" il testo della domanda
-  titoloDomanda.textContent = currentQuestion.question;
 
-  // inseriamo dentro il div contenitore "questionContainer" il nostro tag h2 con il testo della domanda
-  questionContainer.appendChild(titoloDomanda);
-  console.log(titoloDomanda);
+    // creiamo un tag h2 dove infilarci dentro il testo della domanda
+    let titoloDomanda = document.createElement("h2");
 
-  // creiamo una variabile con dentro l'array "incorrect_answers" di ogni singola question
-  let answers = currentQuestion.incorrect_answers.concat(currentQuestion.correct_answer)
-  
-  // cicliamo "answers"
+    // inseriamo dentro "titoloDomanda" il testo della domanda
+    titoloDomanda.textContent = currentQuestion.question;
 
-  for (let n = 0; n < answers.length; n++) {
+    // inseriamo dentro il div contenitore "questionContainer" il nostro tag h2 con il testo della domanda
+    questionContainer.appendChild(titoloDomanda);
+    // console.log(titoloDomanda);
 
-    // inizializiamo la varibile "questionType" come una stringa
-    let questionType = 'radio';
+    // creiamo una variabile con dentro l'array "incorrect_answers" di ogni singola question
+    let answers = currentQuestion.incorrect_answers.concat(
+      currentQuestion.correct_answer
+    );
 
-    // creiamo un div contenitore di tutte gli input
-    let risposteContainer = document.createElement('div');
+    // cicliamo "answers"
+    for (let i = 0; i < answers.length; i++) {
+      // inizializiamo la varibile "questionType" come una stringa
+      let questionType = "radio";
 
-    // inseriamo dentro il nuovo div l'html degli input, uno per ogni elmemento dell'array "answers"
-    risposteContainer.innerHTML = `<input type='${questionType}' name='questionNumber${[contatore]}' value='${answers[n]}'> <label>${answers[n]}</label>`
+      // creiamo un div contenitore di tutte gli input
+      let risposteContainer = document.createElement("div");
 
-    // inseriamo dentro il div contenitore "questionContainer" il nostri tag input con le opzioni di risposta
-    questionContainer.appendChild(risposteContainer);
+      // inseriamo dentro il nuovo div l'html degli input, uno per ogni elmemento dell'array "answers"
+      risposteContainer.innerHTML = `<input type='${questionType}' name='questionNumber${[
+        contatore,
+      ]}' value='${answers[i]}'> <label>${answers[i]}</label>`;
 
-    if (answers[n].valueOf() === currentQuestion.correct_answer) {
-      risposteGiuste++;
+      // inseriamo dentro il div contenitore "questionContainer" il nostri tag input con le opzioni di risposta
+      questionContainer.appendChild(risposteContainer);
+
+      // andiamo ad incrementare il valore delle risposte giuste
+      if (answers[i].valueOf() === currentQuestion.correct_answer) {
+        risposteGiuste++;
+      }
+      // console.log(risposteGiuste);
+      // console.log(currentQuestion.correct_answer);
+      // console.log(answers[n].valueOf());
+      // console.log(risposteContainer);
     }
-    console.log(risposteGiuste);
-    console.log(currentQuestion.correct_answer);
-    console.log(answers[n].valueOf());
-    // console.log(risposteContainer);
+
+    let bottone = document.createElement("div");
+    bottone.innerHTML = '<button id="confirmButton">Conferma Risposta</button>';
+    questionContainer.appendChild(bottone);
+
+    
+    // FUNZIONE PER LA CONFERMA DELLA RISPOSTA
+    // puntatore del bottone
+    const confirmAnswer = document.getElementById("confirmButton");
+
+    confirmAnswer.addEventListener("click", function () {
+      // prendiamo l'input dell'utente
+      let selectedAnswer = document.querySelector(
+        `input[name='questionNumber${contatore}']:checked`
+      );
+
+      // controllo se la risposta è corretta
+      if (selectedAnswer.value === currentQuestion.correct_answer) {
+        risposteGiuste++;
+      }
+
+      // domanda successiva
+      contatore++;
+      makeQuestion();
+      console.log(contatore);
+    });
   }
 
-  let bottone = document.createElement('div');
-  bottone.innerHTML = '<button id="confirmButton">Conferma Risposta</button>';
-  questionContainer.appendChild(bottone);
+  // creo il contatore delle domande
+  let questionCounter = document.getElementById("questionCounter");
+  questionCounter.textContent = `Question ${contatore + 1}/${questions.length}`;
 
-  const confirmAnswer = document.getElementById('confirmButton');
-  
-  confirmAnswer.addEventListener('click', function () {
-    contatore++; 
-    makeQuestion();   
-  })
+  if (contatore >= questions.length) {
+    // così facendo una volta superata la domanda 10 il contatore non sarà più visibile
+    questionCounter.innerHTML = "";
   }
 }
-  
+
 makeQuestion();
-
-
-
-
-
-
-
-
-
-
-    
-    
- 
-
-
-
-
