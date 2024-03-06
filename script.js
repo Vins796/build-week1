@@ -156,10 +156,10 @@ for (let i = 0; i < questions.length; i++) {
   questionContainer.appendChild(titoloDomanda);
 
   // creiamo una variabile con dentro l'array "incorrect_answers" di ogni singola question
-  let incorrectAnswers = questions[i].incorrect_answers
+  let answers = questions[i].incorrect_answers.concat(questions[i].correct_answer)
   
-  // cicliamo "incorrectAnswers"
-  for (let n = 0; n < incorrectAnswers.length; n++) {
+  // cicliamo "answers"
+  for (let n = 0; n < answers.length; n++) {
 
     // TODO - chiedere a Simo se ha senso questa distinzione x type (radio/checkbox)
     // inizializiamo la varibile "questionType" come una stringa
@@ -173,13 +173,14 @@ for (let i = 0; i < questions.length; i++) {
     }
 
     // creiamo un div contenitore di tutte gli input
-    let risposte = document.createElement('div'); 
+    let risposteContainer = document.createElement('div'); 
 
-    // inseriamo dentro il nuovo div l'html degli input, uno per ogni elmemento dell'array "incorrectAnswers"
-    risposte.innerHTML = `<input type='${questionType}' name='questionNumber${[i]}' value='${incorrectAnswers[n]}'> <label>${incorrectAnswers[n]}</label>`
+    // inseriamo dentro il nuovo div l'html degli input, uno per ogni elmemento dell'array "answers"
+    risposteContainer.innerHTML = `<input type='${questionType}' name='questionNumber${[i]}' value='${answers[n]}'> <label>${answers[n]}</label>`
 
     // inseriamo dentro il div contenitore "questionContainer" il nostri tag input con le opzioni di risposta
-    questionContainer.appendChild(risposte);
+    questionContainer.appendChild(risposteContainer);
+    console.log(risposteContainer);
   }
 }
     
