@@ -137,7 +137,8 @@ TODO LIST
 */
 
 
-// PAGINA BENVENUTO
+/* ---------------------------------- PAGINA BENVENUTO ---------------------------------- */
+
 function proceed() {
 
   const inputCheckbox = document.getElementById('checkbox1');
@@ -150,15 +151,21 @@ function proceed() {
 }
 
 
+/* ---------------------------------- PAGINA DOMANDA ---------------------------------- */
+
 // puntatore div contenitore della domanda 
 const questionContainer = document.getElementById('question')
 let contatore = 0;
 let risposteGiuste = 0;
 
+// funzione che fa la domanda
 function makeQuestion() {
 
+  // puliamo il container 
   questionContainer.innerHTML = '';
-  if (contatore >= questions.length) {
+
+  //  se contatore ugiale alla lunghezza dell'array mostriamo i risultati del test altrimenti altra domanda
+  if (contatore === questions.length) {
     questionContainer.innerHTML = `<h2> Complimenti! Hai completato il quiz </h2>`;
 
     let pippo = document.createElement('section');
@@ -167,59 +174,81 @@ function makeQuestion() {
     questionContainer.appendChild(pippo);
 
   } else {
+
+    // const che contiene la domanda corrente
     const currentQuestion = questions[contatore];
   
-  // creiamo un tag p dove infilarci dentro il testo della domanda
-  let titoloDomanda = document.createElement('h2');
-  
-  // inseriamo dentro "titoloDomanda" il testo della domanda
-  titoloDomanda.textContent = currentQuestion.question;
 
-  // inseriamo dentro il div contenitore "questionContainer" il nostro tag h2 con il testo della domanda
-  questionContainer.appendChild(titoloDomanda);
-  console.log(titoloDomanda);
+    /* ----------------- DOMANDA ----------------- */
 
-  // creiamo una variabile con dentro l'array "incorrect_answers" di ogni singola question
-  let answers = currentQuestion.incorrect_answers.concat(currentQuestion.correct_answer)
-  
-  // cicliamo "answers"
+    // creiamo un tag h2 dove infilarci dentro il testo della domanda
+    let titoloDomanda = document.createElement('h2');
+    
+    // inseriamo dentro "titoloDomanda" il testo della domanda
+    titoloDomanda.textContent = currentQuestion.question;
 
-  for (let n = 0; n < answers.length; n++) {
+    // inseriamo dentro il div contenitore "questionContainer" il nostro tag h2 con il testo della domanda
+    questionContainer.appendChild(titoloDomanda);
 
-    // inizializiamo la varibile "questionType" come una stringa
-    let questionType = 'radio';
 
-    // creiamo un div contenitore di tutte gli input
-    let risposteContainer = document.createElement('div');
+    /* ----------------- RISPOSTE ----------------- */
 
-    // inseriamo dentro il nuovo div l'html degli input, uno per ogni elmemento dell'array "answers"
-    risposteContainer.innerHTML = `<input type='${questionType}' name='questionNumber${[contatore]}' value='${answers[n]}'> <label>${answers[n]}</label>`
+    // creiamo una variabile con dentro l'array "incorrect_answers" di ogni singola question
+    let answers = currentQuestion.incorrect_answers.concat(currentQuestion.correct_answer)
+    
+    // cicliamo "answers"
+    for (let n = 0; n < answers.length; n++) {
 
-    // inseriamo dentro il div contenitore "questionContainer" il nostri tag input con le opzioni di risposta
-    questionContainer.appendChild(risposteContainer);
+      // inizializiamo la varibile "questionType" come una stringa
+      let questionType = 'radio';
 
-    if (answers[n].valueOf() === currentQuestion.correct_answer) {
-      risposteGiuste++;
+      // creiamo un div contenitore di tutte gli input
+      let risposteContainer = document.createElement('div');
+
+      // inseriamo dentro il nuovo div l'html degli input, uno per ogni elmemento dell'array "answers"
+      risposteContainer.innerHTML = `<input type='${questionType}' name='questionNumber${[contatore]}' value='${answers[n]}'> <label>${answers[n]}</label>`
+
+      // inseriamo dentro il div contenitore "questionContainer" il nostri tag input con le opzioni di risposta
+      questionContainer.appendChild(risposteContainer);
+
+      if (answers[n].valueOf() === currentQuestion.correct_answer) {
+        risposteGiuste++;
+      }
+      console.log(risposteGiuste);
+      console.log(currentQuestion.correct_answer);
+      console.log(answers[n].valueOf());
+      // console.log(risposteContainer);
     }
-    console.log(risposteGiuste);
-    console.log(currentQuestion.correct_answer);
-    console.log(answers[n].valueOf());
-    // console.log(risposteContainer);
-  }
 
-  let bottone = document.createElement('div');
-  bottone.innerHTML = '<button id="confirmButton">Conferma Risposta</button>';
-  questionContainer.appendChild(bottone);
 
-  const confirmAnswer = document.getElementById('confirmButton');
-  
-  confirmAnswer.addEventListener('click', function () {
-    contatore++; 
-    makeQuestion();   
-  })
+    /* ------------- CONTATORE DOMANDE ------------- */
+
+    let counterDomande = document.createElement('div');
+    counterDomande.innerHTML = `<h4>Question ${contatore + 1}<span class="">/${questions.length}</span></h4>`;
+    questionContainer.appendChild(counterDomande);
+
+
+    /* ------------- BOTTONE DI CONFERMA ------------- */
+
+    let bottone = document.createElement('div');
+    bottone.innerHTML = '<button id="confirmButton">Conferma Risposta</button>';
+    questionContainer.appendChild(bottone);
+    const confirmAnswer = document.getElementById('confirmButton');
+    
+
+    /* ------------ EVENT LISTNER BOTTONE ------------ */
+
+    confirmAnswer.addEventListener('click', function () {
+      // Aumento il contatore di currentQuestion
+      contatore++; 
+      // Faccio la  prossima domanda
+      makeQuestion();   
+    })
+
   }
 }
   
+// Faccio la domanda al primo atterraggio
 makeQuestion();
 
 
