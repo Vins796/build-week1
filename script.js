@@ -103,23 +103,25 @@ const questions = [
 
 TODO LIST
 
-DONE - 1 - creare un contenitore per la domanda e le risposte 
+DONE - 1 - creare un contenitore per la domanda e le risposte
 
 DONE - 2 - creare funzione per fare la domanda (una alla volta)
 
 TODO - 3 - gestire il testo della domanda (questions[i].question)
   
-TODO - 4 - i bottoni (input type radio) per le risposte sbagliate e corretta
+TODO - 4 - gestire i bottoni (input type radio) per risposte sbagliate e corretta
+
+DONE - 5 - gestire il contatore delle domande nella parte bassa della pagina
+
+TODO - 6 - creare un eventListner al click su uno degli input per triggerare prossima iterazione
+
+TODO - 7 - raccogliere le risposte dell'utente e creare un sistema di punteggio
+
+TODO - 8 - a fine test mostrare il punteggio
+
+TODO - 9 - (extra) creare una funzione che randomizza la posizione dei bottoni
   
-DONE - 5 - creare nella parte bassa della pagina il contatore delle domande
-
-TODO - 6 - raccogliere le risposte dell'utente e creare un sistema di punteggio
-
-TODO - 7 - a fine test mostrare il punteggio
-
-TODO - 8 - (extra) creare una funzione che randomizza la posizione dei bottoni
-  
-TODO - 9 - (extra) creare un timer di 60 secondi
+TODO - 10- (extra) creare un timer di 60 secondi
            allo scadere viene raccolto l'input value dell'utente
            (o niente se non ha selezionato nulla) e prosegue 
            con la prossima iterazione dell'array questions
