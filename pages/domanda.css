@@ -30,6 +30,15 @@ h2 {
     min-height: 120px;
 }
 
+.final-text {
+    font-size: 60px;
+    margin: 0 0 30px;
+    text-align: center;
+    min-height: 120px;
+    width: 70%;
+    margin-bottom: 20px;
+}
+
 h2.long-text {
     font-size: 45px;
 }

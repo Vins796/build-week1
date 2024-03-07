@@ -116,25 +116,24 @@ const questions = [
   
   TODO - 9 - (extra) creare una funzione che randomizza la posizione dei bottoni
     
-  TODO - 10- (extra) creare un timer di 60 secondi
+  DONE - 10- (extra) creare un timer di 60 secondi
              allo scadere viene raccolto l'input value dell'utente
              (o niente se non ha selezionato nulla) e prosegue 
              con la prossima iterazione dell'array questions
   
   */
 
-// PAGINA DOMANDE
-
-/* ---------------------------------- PAGINA DOMANDA ---------------------------------- */
 
 // puntatore div contenitore della domanda
 const questionContainer = document.getElementById("question");
+// inizializzazione contatore
 let contatore = 0;
+// inizializzazione risposte
 let risposteGiuste = 0;
 
 // inizializzazione timer
-const timerDiv = document.getElementById("timer") 
-let timerInterval = null
+const timerDiv = document.getElementById("timer");
+let timerInterval;
 
 
 // funzione che fa la domanda
@@ -142,52 +141,59 @@ function makeQuestion() {
   // puliamo il container
   questionContainer.innerHTML = "";
 
-  //  se contatore ugiale alla lunghezza dell'array mostriamo i risultati del test altrimenti altra domanda
+  //  se contatore uguale alla lunghezza dell'array mostriamo i risultati del test altrimenti altra domanda
   if (contatore >= questions.length) {
+    // rimozione timer
     timerDiv.innerHTML = "";
-    questionContainer.innerHTML = `<h2> Complimenti! Hai completato il quiz. Hai totalizzato ${risposteGiuste} risposte corrette su ${contatore} </h2>`;
-    return;
+    // stabiliamo il messaggio finale in base alle risposte corrette
+    if (risposteGiuste < 4) {
+      questionContainer.innerHTML = `<h2 class="final-text">Ci dispiace ma non hai superato il test! <br> Hai totalizzato ${risposteGiuste}/${contatore} </h2>`;
+    } else {
+      questionContainer.innerHTML = `<h2 class="final-text"> Complimenti! Hai completato il quiz. <br> Hai totalizzato ${risposteGiuste}/${contatore} </h2>`;
+    }
+    return; // interruzione funzione
   } else {
-
     // const che contiene la domanda corrente
     const questionNumber = questions[contatore];
 
-
     // start timer
-    timer()
+    timer();
 
     /* ----------------- DOMANDA ----------------- */
 
-    // creiamo un tag h2 dove infilarci dentro il testo della domanda
+    // creiamo un tag section dove infilarci dentro il testo della domanda
     let titoloDomanda = document.createElement("section");
 
     // inseriamo dentro "titoloDomanda" il testo della domanda
+    // se il testo supera un determinato n. di caratteri cambiamo font-size dandogli la classe long-text
     if (questionNumber.question.length >= 35) {
       titoloDomanda.innerHTML = `<h2 class="long-text">${questionNumber.question}</h2>`;
     } else {
       titoloDomanda.innerHTML = `<h2>${questionNumber.question}</h2>`;
     }
 
-
     // inseriamo dentro il div contenitore "questionContainer" il nostro tag h2 con il testo della domanda
     questionContainer.appendChild(titoloDomanda);
+
 
     /* ----------------- RISPOSTE ----------------- */
 
     // creiamo una variabile con dentro l'array "incorrect_answers" di ogni singola question
     let answers = questionNumber.incorrect_answers.concat(
-      questionNumber.correct_answer
+      questionNumber.correct_answer // concateniamo sia le risposte sbagliate che quella corretta
     );
-
-    // cicliamo "answers"
+    
+    // creiamo contenitore che conterrà le risposte
     let contenitoreButton = document.createElement("section");
-    contenitoreButton.innerHTML = '<div id="contenitoreButton" class="contenitore-button"></div>';
+    contenitoreButton.innerHTML =
+    '<div id="contenitoreButton" class="contenitore-button"></div>';
     questionContainer.appendChild(contenitoreButton);
-
-    let divButton = document.getElementById('contenitoreButton')
-
+    
+    let divButton = document.getElementById("contenitoreButton");
+    
+    // cicliamo "answers"
     for (let n = 0; n < answers.length; n++) {
-      // creiamo un button contenitore di tutte gli input
+      // creiamo un button contenitore di tutti gli input
       let risposteContainer = document.createElement("button");
 
       // inseriamo dentro il nuovo div l'html degli input, uno per ogni elmemento dell'array "answers"
@@ -199,101 +205,77 @@ function makeQuestion() {
       }'> <label for='idInput${[n]}' >${answers[n]}</label>
         `;
 
-      // inseriamo dentro il div contenitore "questionContainer" il nostri tag input con le opzioni di risposta
       divButton.appendChild(risposteContainer);
 
-      
-      // console.log(currentQuestion.correct_answer);
-      // console.log(answers[n].valueOf());
-      // // console.log(risposteContainer);
     }
 
+    // creiamo un array per gli input
+    const radioInput = Array.from(document.getElementsByTagName("input"));
 
-    /* ------------- BOTTONE DI CONFERMA ------------- */
-
-    // let bottone = document.createElement("div");
-    // bottone.innerHTML = '<button id="confirmButton">Conferma Risposta</button>';
-    // questionContainer.appendChild(bottone);
-    // const confirmAnswer = document.getElementById("confirmButton");
-
-    const radioInput = Array.from(document.getElementsByTagName('input'));
-
-    radioInput.forEach(input => {
-        input.addEventListener('click', function () {
-            input.classList.add('checked')
-            if (input.value === questionNumber.correct_answer) {
-                risposteGiuste++;
-            } 
-            setTimeout(() => {                
-                contatore++;
-                makeQuestion();
-            }, 1500);
-        })
-    })
-    // console.log(radioInput);
+    // cicliamo gli input inserendo un event listener che al click aumenta il contatore delle risposte giuste e aumenta il valore dell'index delle domande
+    radioInput.forEach((input) => {
+      input.addEventListener("click", function () {
+        input.classList.add("checked");
+        if (input.value === questionNumber.correct_answer) {
+          risposteGiuste++;
+        }
+        // ritardiamo la conferma data dal click dell'input
+        setTimeout(() => {
+          contatore++;
+          makeQuestion(); // lanciamo la nuova domanda
+        }, 1500);
+      });
+    });
 
 
     /* ------------- CONTATORE DOMANDE ------------- */
 
     let counterDomande = document.createElement("div");
-    counterDomande.innerHTML = `<h4>Question ${contatore + 1}<span class="primary">/${
-      questions.length
-    }</span></h4>`;
+    counterDomande.innerHTML = `<h4>Question ${
+      contatore + 1
+    }<span class="primary">/${questions.length}</span></h4>`;
     questionContainer.appendChild(counterDomande);
 
-    // FUNZIONE PER LA CONFERMA DELLA RISPOSTA
-    // puntatore del bottone
-
-    // confirmAnswer.addEventListener("click", function () {
-    //   // prendiamo l'input dell'utente
-      
-
-    //   // controllo se la risposta è corretta
-    //   if (selectedAnswer.value === currentQuestion.correct_answer) {
-    //     risposteGiuste++;
-    //     console.log(risposteGiuste);
-    //   }
-
-    //   // domanda successiva
-    //   contatore++;
-    //   makeQuestion();
-    //   // console.log(contatore);
-    // });
   }
 }
 
-makeQuestion();
-
+makeQuestion(); // richiamiamo la funzione
 
 // TIMER
 function timer() {
-
-  const FULL_DASH_ARRAY = 283;
-  const WARNING_THRESHOLD = 10;
-  const ALERT_THRESHOLD = 5;
   
+  if (contatore >= questions.length) {
+    return;
+  }
+
+  const FULL_DASH_ARRAY = 283; // ring timer
+  const WARNING_THRESHOLD = 10; // warning a 10 secondi
+  const ALERT_THRESHOLD = 5; // warning a 5 secondi
+
+  // dichiarazione dei colori del ring
   const COLOR_CODES = {
     info: {
-      color: "green"
+      color: "green",
     },
     warning: {
       color: "orange",
-      threshold: WARNING_THRESHOLD
+      threshold: WARNING_THRESHOLD,
     },
     alert: {
       color: "red",
-      threshold: ALERT_THRESHOLD
-    }
+      threshold: ALERT_THRESHOLD,
+    },
   };
 
-  clearInterval(timerInterval);
-  
-  const TIME_LIMIT = 3;
+  clearInterval(timerInterval); // reset del timer
+
+  const TIME_LIMIT = 30; // inizializzazione timer a 30 secondi
   let timePassed = 0;
   let timeLeft = TIME_LIMIT;
   let remainingPathColor = COLOR_CODES.info.color;
 
-timerDiv.innerHTML = `
+  // creazione interfaccia timer
+  timerDiv.innerHTML = `
   <div class="base-timer">
     <svg class="base-timer__svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
       <g class="base-timer__circle">
@@ -318,15 +300,17 @@ timerDiv.innerHTML = `
     </span>
   </div>
   `;
-  
-  startTimer();
-  
+
+  startTimer(); // inizio del timer
+
+  // stabiliamo che alla fine del timer resetta il timer e fa lo switch alla domanda successiva
   function onTimesUp() {
     clearInterval(timerInterval);
     contatore++;
     makeQuestion();
   }
-  
+
+  // creazione della funzione che inizializza il timer
   function startTimer() {
     timerInterval = setInterval(() => {
       timePassed = timePassed += 1;
@@ -335,26 +319,28 @@ timerDiv.innerHTML = `
       <span class="text-timer">seconds</span>
       ${formatTime(timeLeft)}
       <span class="text-timer">remaining</span>
-      `
+      `;
       setCircleDasharray();
       setRemainingPathColor(timeLeft);
-  
+
       if (timeLeft === 0) {
         onTimesUp();
       }
     }, 1000);
   }
-  
+
+  // calcolo dei secondi 
   function formatTime(time) {
     let seconds = time % 60;
-  
+
     if (seconds < 10) {
       seconds = `0${seconds}`;
     }
-  
+
     return `${seconds}`;
   }
-  
+
+  // in base all'intervallo di secondi stabilito in precedenza facciamo cambiare i colori del ring in base ad essi
   function setRemainingPathColor(timeLeft) {
     const { alert, warning, info } = COLOR_CODES;
     if (timeLeft <= alert.threshold) {
@@ -373,12 +359,13 @@ timerDiv.innerHTML = `
         .classList.add(warning.color);
     }
   }
-  
+
   function calculateTimeFraction() {
     const rawTimeFraction = timeLeft / TIME_LIMIT;
     return rawTimeFraction - (1 / TIME_LIMIT) * (1 - rawTimeFraction);
   }
-  
+
+  // in base ai secondi che passano il ring si riduce di conseguenza
   function setCircleDasharray() {
     const circleDasharray = `${(
       calculateTimeFraction() * FULL_DASH_ARRAY
@@ -388,4 +375,3 @@ timerDiv.innerHTML = `
       .setAttribute("stroke-dasharray", circleDasharray);
   }
 }
-
