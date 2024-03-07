@@ -98,40 +98,34 @@ const questions = [
 
 TODO LIST
 
-1 - creare un contenitore per la domanda e le risposte
+DONE - 1 - creare un contenitore per la domanda e le risposte
 
-2 - ciclare gli oggetti dell'array questions
+DONE - 2 - creare funzione per fare la domanda (una alla volta)
 
-3 - per ogni oggetto (questions[i]) creare:
-
-  a - il testo della domanda (questions[i].question)
+TODO - 3 - gestire il testo della domanda (questions[i].question)
   
-  b - i bottoni (input type radio / checkbox) per le risposte sbagliate
-      (ciclo su array questions[i].incorrect_answers + questions[i].correct_answer)
-  
-  c - creare nella parte bassa della pagina il contatore delle domande
-      (es. "Question 1/10")
-  
-  e - bottone di conferma con event Listener che raccoglie il value
-      inserito dall'utente e triggera la prossima domanda
-  
-  d - (extra) creare una funzione che randomizza la posizione dei bottoni
-      (input incorrect_answers + correct_answer)
-  
-  f - (extra) creare un timer di 60 secondi
-      allo scadere viene raccolto l'input value dell'utente
-      (o niente se non ha selezionato nulla) e prosegue 
-      con la prossima iterazione dell'array questions
+TODO - 4 - gestire i bottoni (input type radio) per risposte sbagliate e corretta
 
-4 - usare ciclo do/while (idea) per passare al prossimo elemento dell'array questions
+DONE - 5 - gestire il contatore delle domande nella parte bassa della pagina
 
-5 - raccogliere le risposte dell'utente e creare un sistema di punteggio
+TODO - 6 - creare un eventListner al click su uno degli input per triggerare prossima iterazione
 
-6 - a fine test mostrare il punteggio
+TODO - 7 - raccogliere le risposte dell'utente e creare un sistema di punteggio
+
+TODO - 8 - a fine test mostrare il punteggio
+
+TODO - 9 - (extra) creare una funzione che randomizza la posizione dei bottoni
+  
+TODO - 10- (extra) creare un timer di 60 secondi
+           allo scadere viene raccolto l'input value dell'utente
+           (o niente se non ha selezionato nulla) e prosegue 
+           con la prossima iterazione dell'array questions
 
 */
 
-// PAGINA BENVENUTO
+
+/* ---------------------------------- PAGINA BENVENUTO ---------------------------------- */
+
 function proceed() {
   const inputCheckbox = document.getElementById("checkbox1");
   const link = document.getElementById("linkDomande");
@@ -144,67 +138,86 @@ function proceed() {
 
 // PAGINA DOMANDE
 
-// puntatore div contenitore della domanda
-const questionContainer = document.getElementById("question");
+/* ---------------------------------- PAGINA DOMANDA ---------------------------------- */
+
+// puntatore div contenitore della domanda 
+const questionContainer = document.getElementById('question')
 let contatore = 0;
 let risposteGiuste = 0;
 
+// funzione che fa la domanda
 function makeQuestion() {
-  questionContainer.innerHTML = "";
-  if (contatore >= questions.length) {
+
+  // puliamo il container 
+  questionContainer.innerHTML = '';
+
+  //  se contatore ugiale alla lunghezza dell'array mostriamo i risultati del test altrimenti altra domanda
+  if (contatore === questions.length) {
     questionContainer.innerHTML = `<h2> Complimenti! Hai completato il quiz </h2>`;
   } else {
+
+    // const che contiene la domanda corrente
     const currentQuestion = questions[contatore];
+  
+
+    /* ----------------- DOMANDA ----------------- */
 
     // creiamo un tag h2 dove infilarci dentro il testo della domanda
-    let titoloDomanda = document.createElement("h2");
-
+    let titoloDomanda = document.createElement('h2');
+    
     // inseriamo dentro "titoloDomanda" il testo della domanda
     titoloDomanda.textContent = currentQuestion.question;
 
     // inseriamo dentro il div contenitore "questionContainer" il nostro tag h2 con il testo della domanda
     questionContainer.appendChild(titoloDomanda);
-    // console.log(titoloDomanda);
+
+
+    /* ----------------- RISPOSTE ----------------- */
 
     // creiamo una variabile con dentro l'array "incorrect_answers" di ogni singola question
-    let answers = currentQuestion.incorrect_answers.concat(
-      currentQuestion.correct_answer
-    );
-
+    let answers = currentQuestion.incorrect_answers.concat(currentQuestion.correct_answer)
+    
     // cicliamo "answers"
-    for (let i = 0; i < answers.length; i++) {
+    for (let n = 0; n < answers.length; n++) {
+
       // inizializiamo la varibile "questionType" come una stringa
-      let questionType = "radio";
+      let questionType = 'radio';
 
       // creiamo un div contenitore di tutte gli input
-      let risposteContainer = document.createElement("div");
+      let risposteContainer = document.createElement('div');
 
       // inseriamo dentro il nuovo div l'html degli input, uno per ogni elmemento dell'array "answers"
-      risposteContainer.innerHTML = `<input type='${questionType}' name='questionNumber${[
-        contatore,
-      ]}' value='${answers[i]}'> <label>${answers[i]}</label>`;
+      risposteContainer.innerHTML = `<input type='${questionType}' name='questionNumber${[contatore]}' value='${answers[n]}'> <label>${answers[n]}</label>`
 
       // inseriamo dentro il div contenitore "questionContainer" il nostri tag input con le opzioni di risposta
       questionContainer.appendChild(risposteContainer);
 
-      // andiamo ad incrementare il valore delle risposte giuste
-      if (answers[i].valueOf() === currentQuestion.correct_answer) {
+      if (answers[n].valueOf() === currentQuestion.correct_answer) {
         risposteGiuste++;
       }
-      // console.log(risposteGiuste);
-      // console.log(currentQuestion.correct_answer);
-      // console.log(answers[n].valueOf());
+      console.log(risposteGiuste);
+      console.log(currentQuestion.correct_answer);
+      console.log(answers[n].valueOf());
       // console.log(risposteContainer);
     }
 
-    let bottone = document.createElement("div");
+
+    /* ------------- CONTATORE DOMANDE ------------- */
+
+    let counterDomande = document.createElement('div');
+    counterDomande.innerHTML = `<h4>Question ${contatore + 1}<span class="">/${questions.length}</span></h4>`;
+    questionContainer.appendChild(counterDomande);
+
+
+    /* ------------- BOTTONE DI CONFERMA ------------- */
+
+    let bottone = document.createElement('div');
     bottone.innerHTML = '<button id="confirmButton">Conferma Risposta</button>';
     questionContainer.appendChild(bottone);
+    const confirmAnswer = document.getElementById('confirmButton');
 
-    
     // FUNZIONE PER LA CONFERMA DELLA RISPOSTA
     // puntatore del bottone
-    const confirmAnswer = document.getElementById("confirmButton");
 
     confirmAnswer.addEventListener("click", function () {
       // prendiamo l'input dell'utente
@@ -232,6 +245,74 @@ function makeQuestion() {
     // così facendo una volta superata la domanda 10 il contatore non sarà più visibile
     questionCounter.innerHTML = "";
   }
-}
+    
+
+    /* ------------ EVENT LISTNER BOTTONE ------------ */
+
+    confirmAnswer.addEventListener('click', function () {
+      // Aumento il contatore di currentQuestion
+      contatore++; 
+      // Faccio la  prossima domanda
+      makeQuestion();   
+    })
+
+  }
+
+  
 
 makeQuestion();
+
+//timer
+function nextQuestion() {
+  contatore++; 
+  makeQuestion(); 
+  countdownTime = originaleCountdownTime; 
+  clearInterval(countdownInterval);
+  countdownInterval = setInterval(countdownFunction, 1000);
+  var cerchio1Element = document.querySelector(".cerchio1");
+  cerchio1Element.style.borderColor = "green";
+}
+
+
+var originaleCountdownTime = 60 * 1000;
+var countdownTime = originaleCountdownTime;
+
+function countdownFunction() {
+  var seconds = Math.floor(countdownTime / 1000);
+  var countdownElement = document.getElementById("countdown");
+  var cerchio1Element = document.querySelector(".cerchio1");
+
+  if (seconds <= 35 && seconds > 10) {
+      cerchio1Element.style.borderColor = "yellow";
+  } else if (seconds <= 10) {
+      cerchio1Element.style.borderColor = "red"; 
+  }
+
+  var secondsElement = document.querySelector(".seconds");
+  secondsElement.textContent = "00:" + seconds.toString().padStart(2, '0');
+  countdownTime -= 1000;
+
+  if (seconds === 0) {
+      clearInterval(countdownInterval);
+      nextQuestion();
+  }
+}
+
+var countdownInterval = setInterval(countdownFunction, 1000);
+
+
+
+
+
+
+
+
+
+
+    
+    
+ 
+
+
+
+
