@@ -133,7 +133,9 @@ let contatore = 0;
 let risposteGiuste = 0;
 
 // inizializzazione timer
+const timerDiv = document.getElementById("timer") 
 let timerInterval = null
+
 
 // funzione che fa la domanda
 function makeQuestion() {
@@ -141,11 +143,14 @@ function makeQuestion() {
   questionContainer.innerHTML = "";
 
   //  se contatore ugiale alla lunghezza dell'array mostriamo i risultati del test altrimenti altra domanda
-  if (contatore === questions.length) {
+  if (contatore >= questions.length) {
+    timerDiv.innerHTML = "";
     questionContainer.innerHTML = `<h2> Complimenti! Hai completato il quiz. Hai totalizzato ${risposteGiuste} risposte corrette su ${contatore} </h2>`;
+    return;
   } else {
+
     // const che contiene la domanda corrente
-    const currentQuestion = questions[contatore];
+    const questionNumber = questions[contatore];
 
 
     // start timer
@@ -157,10 +162,10 @@ function makeQuestion() {
     let titoloDomanda = document.createElement("section");
 
     // inseriamo dentro "titoloDomanda" il testo della domanda
-    if (currentQuestion.question.length >= 35) {
-      titoloDomanda.innerHTML = `<h2 class="long-text">${currentQuestion.question}</h2>`;
+    if (questionNumber.question.length >= 35) {
+      titoloDomanda.innerHTML = `<h2 class="long-text">${questionNumber.question}</h2>`;
     } else {
-      titoloDomanda.innerHTML = `<h2>${currentQuestion.question}</h2>`;
+      titoloDomanda.innerHTML = `<h2>${questionNumber.question}</h2>`;
     }
 
 
@@ -170,8 +175,8 @@ function makeQuestion() {
     /* ----------------- RISPOSTE ----------------- */
 
     // creiamo una variabile con dentro l'array "incorrect_answers" di ogni singola question
-    let answers = currentQuestion.incorrect_answers.concat(
-      currentQuestion.correct_answer
+    let answers = questionNumber.incorrect_answers.concat(
+      questionNumber.correct_answer
     );
 
     // cicliamo "answers"
@@ -216,7 +221,7 @@ function makeQuestion() {
     radioInput.forEach(input => {
         input.addEventListener('click', function () {
             input.classList.add('checked')
-            if (input.value === currentQuestion.correct_answer) {
+            if (input.value === questionNumber.correct_answer) {
                 risposteGiuste++;
             } 
             setTimeout(() => {                
@@ -283,12 +288,12 @@ function timer() {
 
   clearInterval(timerInterval);
   
-  const TIME_LIMIT = 30;
+  const TIME_LIMIT = 3;
   let timePassed = 0;
   let timeLeft = TIME_LIMIT;
   let remainingPathColor = COLOR_CODES.info.color;
-  
-  document.getElementById("timer").innerHTML = `
+
+timerDiv.innerHTML = `
   <div class="base-timer">
     <svg class="base-timer__svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
       <g class="base-timer__circle">
