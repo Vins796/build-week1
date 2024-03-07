@@ -102,17 +102,17 @@ const questions = [
   
   DONE - 2 - creare funzione per fare la domanda (una alla volta)
   
-  TODO - 3 - gestire il testo della domanda (questions[i].question)
+  DONE - 3 - gestire il testo della domanda (questions[i].question)
     
-  TODO - 4 - gestire i bottoni (input type radio) per risposte sbagliate e corretta
+  DONE - 4 - gestire i bottoni (input type radio) per risposte sbagliate e corretta
   
   DONE - 5 - gestire il contatore delle domande nella parte bassa della pagina
   
-  TODO - 6 - creare un eventListner al click su uno degli input per triggerare prossima iterazione
+  DONE - 6 - creare un eventListner al click su uno degli input per triggerare prossima iterazione
   
-  TODO - 7 - raccogliere le risposte dell'utente e creare un sistema di punteggio
+  DONE - 7 - raccogliere le risposte dell'utente e creare un sistema di punteggio
   
-  TODO - 8 - a fine test mostrare il punteggio
+  DONE - 8 - a fine test mostrare il punteggio
   
   TODO - 9 - (extra) creare una funzione che randomizza la posizione dei bottoni
     
@@ -132,6 +132,9 @@ const questionContainer = document.getElementById("question");
 let contatore = 0;
 let risposteGiuste = 0;
 
+// inizializzazione timer
+let timerInterval = null
+
 // funzione che fa la domanda
 function makeQuestion() {
   // puliamo il container
@@ -144,13 +147,22 @@ function makeQuestion() {
     // const che contiene la domanda corrente
     const currentQuestion = questions[contatore];
 
+
+    // start timer
+    timer()
+
     /* ----------------- DOMANDA ----------------- */
 
     // creiamo un tag h2 dove infilarci dentro il testo della domanda
     let titoloDomanda = document.createElement("section");
 
     // inseriamo dentro "titoloDomanda" il testo della domanda
-    titoloDomanda.innerHTML = `<h2>${currentQuestion.question}</h2>`;
+    if (currentQuestion.question.length >= 35) {
+      titoloDomanda.innerHTML = `<h2 class="long-text">${currentQuestion.question}</h2>`;
+    } else {
+      titoloDomanda.innerHTML = `<h2>${currentQuestion.question}</h2>`;
+    }
+
 
     // inseriamo dentro il div contenitore "questionContainer" il nostro tag h2 con il testo della domanda
     questionContainer.appendChild(titoloDomanda);
@@ -210,7 +222,7 @@ function makeQuestion() {
             setTimeout(() => {                
                 contatore++;
                 makeQuestion();
-            }, 3000);
+            }, 1500);
         })
     })
     // console.log(radioInput);
@@ -219,7 +231,7 @@ function makeQuestion() {
     /* ------------- CONTATORE DOMANDE ------------- */
 
     let counterDomande = document.createElement("div");
-    counterDomande.innerHTML = `<h4>Question ${contatore + 1}<span class="">/${
+    counterDomande.innerHTML = `<h4>Question ${contatore + 1}<span class="primary">/${
       questions.length
     }</span></h4>`;
     questionContainer.appendChild(counterDomande);
@@ -247,39 +259,128 @@ function makeQuestion() {
 
 makeQuestion();
 
-// //timer
-// function nextQuestion() {
-//   contatore++;
-//   makeQuestion();
-//   countdownTime = originaleCountdownTime;
-//   clearInterval(countdownInterval);
-//   countdownInterval = setInterval(countdownFunction, 1000);
-//   var cerchio1Element = document.querySelector(".cerchio1");
-//   cerchio1Element.style.borderColor = "green";
-// }
 
-// var originaleCountdownTime = 60 * 1000;
-// var countdownTime = originaleCountdownTime;
+// TIMER
+function timer() {
 
-// function countdownFunction() {
-//   var seconds = Math.floor(countdownTime / 1000);
-//   // var countdownElement = document.getElementById("countdown");
-//   var cerchio1Element = document.querySelector(".cerchio1");
+  const FULL_DASH_ARRAY = 283;
+  const WARNING_THRESHOLD = 10;
+  const ALERT_THRESHOLD = 5;
+  
+  const COLOR_CODES = {
+    info: {
+      color: "green"
+    },
+    warning: {
+      color: "orange",
+      threshold: WARNING_THRESHOLD
+    },
+    alert: {
+      color: "red",
+      threshold: ALERT_THRESHOLD
+    }
+  };
 
-//   if (seconds <= 35 && seconds > 10) {
-//     cerchio1Element.style.borderColor = "yellow";
-//   } else if (seconds <= 10) {
-//     cerchio1Element.style.borderColor = "red";
-//   }
+  clearInterval(timerInterval);
+  
+  const TIME_LIMIT = 30;
+  let timePassed = 0;
+  let timeLeft = TIME_LIMIT;
+  let remainingPathColor = COLOR_CODES.info.color;
+  
+  document.getElementById("timer").innerHTML = `
+  <div class="base-timer">
+    <svg class="base-timer__svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+      <g class="base-timer__circle">
+        <circle class="base-timer__path-elapsed" cx="50" cy="50" r="45"></circle>
+        <path
+          id="base-timer-path-remaining"
+          stroke-dasharray="283"
+          class="base-timer__path-remaining ${remainingPathColor}"
+          d="
+            M 50, 50
+            m -45, 0
+            a 45,45 0 1,0 90,0
+            a 45,45 0 1,0 -90,0
+          "
+        ></path>
+      </g>
+    </svg>
+    <span id="base-timer-label" class="base-timer__label">
+      <span class="text-timer">seconds</span>
+      ${formatTime(timeLeft)}
+      <span class="text-timer">remaining</span>
+    </span>
+  </div>
+  `;
+  
+  startTimer();
+  
+  function onTimesUp() {
+    clearInterval(timerInterval);
+    contatore++;
+    makeQuestion();
+  }
+  
+  function startTimer() {
+    timerInterval = setInterval(() => {
+      timePassed = timePassed += 1;
+      timeLeft = TIME_LIMIT - timePassed;
+      document.getElementById("base-timer-label").innerHTML = `
+      <span class="text-timer">seconds</span>
+      ${formatTime(timeLeft)}
+      <span class="text-timer">remaining</span>
+      `
+      setCircleDasharray();
+      setRemainingPathColor(timeLeft);
+  
+      if (timeLeft === 0) {
+        onTimesUp();
+      }
+    }, 1000);
+  }
+  
+  function formatTime(time) {
+    let seconds = time % 60;
+  
+    if (seconds < 10) {
+      seconds = `0${seconds}`;
+    }
+  
+    return `${seconds}`;
+  }
+  
+  function setRemainingPathColor(timeLeft) {
+    const { alert, warning, info } = COLOR_CODES;
+    if (timeLeft <= alert.threshold) {
+      document
+        .getElementById("base-timer-path-remaining")
+        .classList.remove(warning.color);
+      document
+        .getElementById("base-timer-path-remaining")
+        .classList.add(alert.color);
+    } else if (timeLeft <= warning.threshold) {
+      document
+        .getElementById("base-timer-path-remaining")
+        .classList.remove(info.color);
+      document
+        .getElementById("base-timer-path-remaining")
+        .classList.add(warning.color);
+    }
+  }
+  
+  function calculateTimeFraction() {
+    const rawTimeFraction = timeLeft / TIME_LIMIT;
+    return rawTimeFraction - (1 / TIME_LIMIT) * (1 - rawTimeFraction);
+  }
+  
+  function setCircleDasharray() {
+    const circleDasharray = `${(
+      calculateTimeFraction() * FULL_DASH_ARRAY
+    ).toFixed(0)} 283`;
+    document
+      .getElementById("base-timer-path-remaining")
+      .setAttribute("stroke-dasharray", circleDasharray);
+  }
+}
 
-//   var secondsElement = document.querySelector(".seconds");
-//   secondsElement.textContent = "00:" + seconds.toString().padStart(2, "0");
-//   countdownTime -= 1000;
-
-//   if (seconds === 0) {
-//     clearInterval(countdownInterval);
-//     nextQuestion();
-//   }
-// }
-
-// var countdownInterval = setInterval(countdownFunction, 1000);

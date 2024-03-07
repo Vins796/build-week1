@@ -1,42 +1,60 @@
 body{
     padding: 0;
     margin: 0;
+    box-sizing: border-box;
     background-image: url(../assets/bg.jpg);
+    font-family: "Outfit", sans-serif;
+    background-repeat: no-repeat;
     background-size: cover;
     color: #fff;
+    height: 100vh;
+    width: 70%;
+    margin: 50px auto;
 }
 
-.header{
-    width: 100%;
-    height:300px;
+header{
     display: flex;
-    align-items: center;
+    align-items: flex-start;
+    justify-content: space-between;
 }
 
-.header img{
-    width:15%;
-    margin-left: 5%;
+.logo {
+    height: 50px;
+    width: auto;
 }
 
 h2 {
-    border: 1px solid red;
-    font-size: 30px;
-    margin: 0;
+    font-size: 60px;
+    margin: 0 0 30px;
+    text-align: center;
+    min-height: 120px;
 }
 
-.domanda{
+h2.long-text {
+    font-size: 45px;
+}
+
+h4 {
+    font-size: 18px;
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    font-weight: 600;
+    margin-top: 100px;
+}
+
+#question{
     width:100%;
-    /* height:200px; */
-    /* margin-top: 50px; */
-    color: aliceblue;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    font-size: 50px;
-    font-weight: 500;
     display: flex;
+    margin-top: 100px;
     flex-direction: column;
     justify-content: center;
     align-items: center;
 }
+
+#question section:last-of-type {
+   min-height: 290px;
+}
+
 
 input[type="radio" i] {
     display: none;
@@ -46,24 +64,32 @@ input {width: 100%; height: 50px;}
 
 #contenitoreButton {
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     flex-wrap: wrap;
     margin-top: 6%;
+    min-height: 220px;
 }
 
 button {
     background-color: unset;
     border: none;
+    flex: 0.25 0 calc(50% - 46px);
+    margin-bottom: 20px;
 }
 
 label {
     display: block;
+    font-family: "Inter", sans-serif;
+    font-size: 16px;
     min-width: 200px;
-    padding: 20px 40px;
+    padding: 24px 40px;
     margin-bottom: 15px;
-    background: #ffffff50;
+    cursor: pointer;
+    background: #ffffff25;
+    border: 2px inset #ffffff75;
     color: #fff;
-    border-radius: 30px;
+    border-radius: 50px;
+    box-shadow: 0px -2px 0px #ddd;
 }
 
 label:hover,
@@ -72,63 +98,73 @@ label:hover,
 }
 
 
-.opzioni{
-    width: 100%;
-    display: flex;
-    justify-content: center;
-}
-
-.opzioni button{
-    width: 20%;
-    height: 100px;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    font-size: 20px;
-    color: aliceblue;
-    background-color: rgba(62, 59, 97, 0.4);
-    border-radius: 50px;
-    margin-right: 40px;
-}
-
-.opzioni button:hover{
-    background-color: blueviolet;
-}
-
-p {font-size: 12px;}
-
-label {font-size: 12px;}
+  /* COLORS */
+  .primary {
+    color: #900080;
+  }
 
 
-/*
-TIMER
-*/
-.contenitoreSecondi {
+
+
+  /* TIMER */
+  .base-timer {
+    position: relative;
+    width: 150px;
+    height: 150px;
+  }
+  
+  .base-timer__svg {
+    transform: scaleX(-1);
+  }
+  
+  .base-timer__circle {
+    fill: none;
+    stroke: none;
+  }
+  
+  .base-timer__path-elapsed {
+    stroke-width: 10px;
+    stroke: #ffffff25;
+  }
+  
+  .base-timer__path-remaining {
+    stroke-width: 7px;
+    stroke-linecap: round;
+    transform: rotate(90deg);
+    transform-origin: center;
+    transition: 1s linear all;
+    fill-rule: nonzero;
+    stroke: currentColor;
+  }
+  
+  .base-timer__path-remaining.green {
+    color: #00ffff;
+  }
+  
+  .base-timer__path-remaining.orange {
+    color: orange;
+  }
+  
+  .base-timer__path-remaining.red {
+    color: red;
+  }
+  
+  .base-timer__label {
+    position: absolute;
+    width: 150px;
+    height: 150px;
+    top: 0;
     display: flex;
     flex-direction: column;
     align-items: center;
-    position: absolute;
-    right: 150px;
-  }
-  
-  .cerchio1 {
-    position: relative;
-    width: 200px;
-    height: 200px;
-    border-radius: 50%;
-    display: flex;
-    border-style: solid;
-    border-color: green;
-    border-width: 30px;
-    transition: border-color 5s ease;
-    margin-right: 0px;
+    justify-content: center;
+    font-size: 50px;
   }
 
-  .seconds {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    font-size: 60px;
-    color: white;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    font-weight: 500;
+  .text-timer {
+    text-transform: uppercase;
+    font-size: 12px;
+    font-weight: 200;
+    line-height: 0.25;
   }
+  
