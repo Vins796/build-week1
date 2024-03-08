@@ -182,11 +182,11 @@ function makeQuestion() {
 
     /* ----------------- RISPOSTE ----------------- */
 
-    // variabile che crea un indice randomico dalla lunghezza dell'array risp sbagliate + 1
-    const randomIndex = Math.floor(Math.random() * (questionNumber.incorrect_answers.length + 1));
+    // array delle risposte sbagliate
+    let answers = questionNumber.incorrect_answers
 
-    // manipolazione array delle risposte sbagliate
-    let answers = questionNumber.incorrect_answers.slice();
+    // variabile che crea un indice randomico dalla lunghezza dell'array risp sbagliate + 1
+    const randomIndex = Math.floor(Math.random() * (answers.length + 1));
 
     // Inserimento nell'array della risposta corretta in una posizione casuale
     answers.splice(randomIndex, 0, questionNumber.correct_answer);
