@@ -191,19 +191,22 @@ function makeQuestion() {
     // Inserimento nell'array della risposta corretta in una posizione casuale
     answers.splice(randomIndex, 0, questionNumber.correct_answer);
     
-    // creiamo contenitore che conterrà le risposte
+    // creiamo un tag section che conterrà le risposte
     let contenitoreButton = document.createElement("section");
 
     contenitoreButton.innerHTML =
     '<div id="contenitoreButton" class="contenitore-button"></div>';
 
+    // inseriamo dentro il div padre il contenitore delle risposte
     questionContainer.appendChild(contenitoreButton);
     
+    // puntiamo il contenitore delle risposte
     let divButton = document.getElementById("contenitoreButton");
     
-    // cicliamo "answers"
+    // cicliamo le risposte
     for (let n = 0; n < answers.length; n++) {
-      // creiamo un button contenitore di tutti gli input
+
+      // creiamo un button contenitore per ogni input
       let risposteContainer = document.createElement("button");
 
       // inseriamo dentro il button input e label
@@ -212,6 +215,7 @@ function makeQuestion() {
         <label for='idInput${[n]}'>${answers[n]}</label>
       `;
 
+      // inseriamo dentro il contenitore delle risposte i button
       divButton.appendChild(risposteContainer);
 
     }
@@ -240,17 +244,22 @@ function makeQuestion() {
 
     /* ------------- CONTATORE DOMANDE ------------- */
 
+    // creiamo un div che contiene il contatore delle domande
     let counterDomande = document.createElement("div");
+
+    // inseriamo dentro il div il testo da visualizzare
     counterDomande.innerHTML = `<h4>Question ${contatore + 1}<span class="primary">/${questions.length}</span></h4>`;
+    
+    // inseriamo dentro il div padre il contatore delle domande
     questionContainer.appendChild(counterDomande);
 
-    // start timer
+    // start timer - alla fine del rendering di tutto il resto
     timer();
 
   }
 }
 
-makeQuestion(); // richiamiamo la funzione
+makeQuestion(); // richiamiamo la funzione per la prima volta
 
 
 /* ---------------- TIMER ---------------- */
