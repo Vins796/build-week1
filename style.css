@@ -67,14 +67,23 @@ imposto lo stile per la section della conferma
 }
 
 /* cambio lo stile al quadratino della checkbox */
-#checkbox1 {
+#checkbox {
     margin-right: 10px; 
     width: 16px; height: 16px; 
     border: 2px solid snow; 
     background-color: transparent;
 }
 
+#checkbox.error {
+    border-color: rgb(215, 55, 55);
+    appearance: none;
+}
+
 label {color: #fff; font-size: 1.2rem;}
+
+.error + label {
+    color: rgb(215, 55, 55);
+}
 
 #btn {
     padding: 15px 40px; 

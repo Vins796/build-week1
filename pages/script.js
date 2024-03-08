@@ -102,9 +102,9 @@ const questions = [
   
   DONE - 2 - creare funzione per fare la domanda (una alla volta)
   
-  DONE - 3 - gestire il testo della domanda (questions[i].question)
+  DONE - 3 - gestire il testo della domanda
     
-  DONE - 4 - gestire i bottoni (input type radio) per risposte sbagliate e corretta
+  DONE - 4 - gestire i bottoni (input type radio) per risposte giuste/sbagliate
   
   DONE - 5 - gestire il contatore delle domande nella parte bassa della pagina
   
@@ -114,21 +114,20 @@ const questions = [
   
   DONE - 8 - a fine test mostrare il punteggio
   
-  TODO - 9 - (extra) creare una funzione che randomizza la posizione dei bottoni
+  DONE - 9 - (extra) creare una funzione che randomizza la posizione dei bottoni
     
-  DONE - 10- (extra) creare un timer di 60 secondi
-             allo scadere viene raccolto l'input value dell'utente
-             (o niente se non ha selezionato nulla) e prosegue 
-             con la prossima iterazione dell'array questions
+  DONE - 10 - (extra) creare un timer di 30 secondi, allo scadere prosegue con la prossima domanda
   
-  */
+*/
 
 
 // puntatore div contenitore della domanda
 const questionContainer = document.getElementById("question");
-// inizializzazione contatore
+
+// inizializzazione contatore domande
 let contatore = 0;
-// inizializzazione risposte
+
+// inizializzazione contatore risposte giuste
 let risposteGiuste = 0;
 
 // inizializzazione timer
@@ -138,26 +137,31 @@ let timerInterval;
 
 // funzione che fa la domanda
 function makeQuestion() {
-  // puliamo il container
+
+  // puliamo il container all'inizio per la prossima domanda
   questionContainer.innerHTML = "";
 
   //  se contatore uguale alla lunghezza dell'array mostriamo i risultati del test altrimenti altra domanda
   if (contatore >= questions.length) {
-    // rimozione timer
+
+    // reset e rimozione timer
     timerDiv.innerHTML = "";
+    clearInterval(timerInterval);
+    
     // stabiliamo il messaggio finale in base alle risposte corrette
     if (risposteGiuste < 4) {
-      questionContainer.innerHTML = `<h2 class="final-text">Ci dispiace ma non hai superato il test! <br> Hai totalizzato ${risposteGiuste}/${contatore} </h2>`;
+      questionContainer.innerHTML = `<h2 class="final-text">Ci dispiace ma non hai superato il test! <br><br> Hai totalizzato ${risposteGiuste}/${contatore} </h2>`;
     } else {
-      questionContainer.innerHTML = `<h2 class="final-text"> Complimenti! Hai completato il quiz. <br> Hai totalizzato ${risposteGiuste}/${contatore} </h2>`;
+      questionContainer.innerHTML = `<h2 class="final-text"> Complimenti!<br> Hai completato il quiz. <br><br> Hai totalizzato ${risposteGiuste}/${contatore} </h2>`;
     }
+    
     return; // interruzione funzione
+
   } else {
+
     // const che contiene la domanda corrente
     const questionNumber = questions[contatore];
 
-    // start timer
-    timer();
 
     /* ----------------- DOMANDA ----------------- */
 
@@ -172,21 +176,27 @@ function makeQuestion() {
       titoloDomanda.innerHTML = `<h2>${questionNumber.question}</h2>`;
     }
 
-    // inseriamo dentro il div contenitore "questionContainer" il nostro tag h2 con il testo della domanda
+    // inseriamo dentro il div contenitore il testo della domanda
     questionContainer.appendChild(titoloDomanda);
 
 
     /* ----------------- RISPOSTE ----------------- */
 
-    // creiamo una variabile con dentro l'array "incorrect_answers" di ogni singola question
-    let answers = questionNumber.incorrect_answers.concat(
-      questionNumber.correct_answer // concateniamo sia le risposte sbagliate che quella corretta
-    );
+    // variabile che crea un indice randomico dalla lunghezza dell'array risp sbagliate + 1
+    const randomIndex = Math.floor(Math.random() * (questionNumber.incorrect_answers.length + 1));
+
+    // manipolazione array delle risposte sbagliate
+    let answers = questionNumber.incorrect_answers.slice();
+
+    // Inserimento nell'array della risposta corretta in una posizione casuale
+    answers.splice(randomIndex, 0, questionNumber.correct_answer);
     
     // creiamo contenitore che conterrà le risposte
     let contenitoreButton = document.createElement("section");
+
     contenitoreButton.innerHTML =
     '<div id="contenitoreButton" class="contenitore-button"></div>';
+
     questionContainer.appendChild(contenitoreButton);
     
     let divButton = document.getElementById("contenitoreButton");
@@ -196,18 +206,18 @@ function makeQuestion() {
       // creiamo un button contenitore di tutti gli input
       let risposteContainer = document.createElement("button");
 
-      // inseriamo dentro il nuovo div l'html degli input, uno per ogni elmemento dell'array "answers"
+      // inseriamo dentro il button input e label
       risposteContainer.innerHTML = `
-        <input id='idInput${[
-          n,
-        ]}' type='radio' name='questionNumber${contatore}' value='${
-        answers[n]
-      }'> <label for='idInput${[n]}' >${answers[n]}</label>
-        `;
+        <input id='idInput${[n]}' type='radio' name='questionNumber${contatore}' value='${answers[n]}'>
+        <label for='idInput${[n]}'>${answers[n]}</label>
+      `;
 
       divButton.appendChild(risposteContainer);
 
     }
+
+
+    /* ------------- EVENT LISTNER INPUTS ------------- */
 
     // creiamo un array per gli input
     const radioInput = Array.from(document.getElementsByTagName("input"));
@@ -231,17 +241,20 @@ function makeQuestion() {
     /* ------------- CONTATORE DOMANDE ------------- */
 
     let counterDomande = document.createElement("div");
-    counterDomande.innerHTML = `<h4>Question ${
-      contatore + 1
-    }<span class="primary">/${questions.length}</span></h4>`;
+    counterDomande.innerHTML = `<h4>Question ${contatore + 1}<span class="primary">/${questions.length}</span></h4>`;
     questionContainer.appendChild(counterDomande);
+
+    // start timer
+    timer();
 
   }
 }
 
 makeQuestion(); // richiamiamo la funzione
 
-// TIMER
+
+/* ---------------- TIMER ---------------- */
+
 function timer() {
   
   if (contatore >= questions.length) {
